@@ -26,7 +26,7 @@ public class QueueDao {
     /**
      * Конструктор.
      * <p>
-     * @param jdbcTemplate        spring jdbc template
+     * @param jdbcTemplate spring jdbc template
      */
     public QueueDao(JdbcOperations jdbcTemplate) {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
@@ -43,16 +43,17 @@ public class QueueDao {
         requireNonNull(location);
         requireNonNull(enqueueParams);
         return jdbcTemplate.queryForObject(String.format(
-                "INSERT INTO %s(queue_name, task, process_time, log_timestamp, actor, reenqueue_attempt, total_attempt) VALUES " +
+                "INSERT INTO %s(queue_name, task, process_time, log_timestamp, actor, reenqueue_attempt, total_attempt, priority) VALUES " +
                         "(:queueName, :task, now() + :executionDelay * INTERVAL '1 SECOND', " +
-                        ":traceInfo, :actor, 0, 0) RETURNING id",
+                        ":traceInfo, :actor, 0, 0, :priority) RETURNING id",
                 location.getTableName()),
                 new MapSqlParameterSource()
                         .addValue("queueName", location.getQueueId().asString())
                         .addValue("task", enqueueParams.getPayload())
                         .addValue("executionDelay", enqueueParams.getExecutionDelay().getSeconds())
                         .addValue("traceInfo", enqueueParams.getTraceInfo())
-                        .addValue("actor", enqueueParams.getActor()),
+                        .addValue("actor", enqueueParams.getActor())
+                        .addValue("priority", enqueueParams.getPriority()),
                 Long.class);
     }
 

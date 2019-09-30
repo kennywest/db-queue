@@ -23,6 +23,8 @@ public final class EnqueueParams<T> {
     private String traceInfo;
     @Nullable
     private String actor;
+    @Nullable
+    private Integer priority;
 
     /**
      * Создать параметры постановки с данными задачи.
@@ -88,6 +90,12 @@ public final class EnqueueParams<T> {
         return this;
     }
 
+    @Nonnull
+    public EnqueueParams<T> withPriority(@Nullable int priority) {
+        this.priority = priority;
+        return this;
+    }
+
     /**
      * Получить данные задачи
      *
@@ -126,6 +134,11 @@ public final class EnqueueParams<T> {
     @Nullable
     public String getActor() {
         return actor;
+    }
+
+    @Nullable
+    public Integer getPriority() {
+        return this.priority;
     }
 
     @Override

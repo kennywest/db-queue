@@ -49,7 +49,8 @@ public class TransactionalProducer<T> implements QueueProducer<T> {
                 .withPayload(payloadTransformer.fromObject(enqueueParams.getPayload()))
                 .withTraceInfo(enqueueParams.getTraceInfo())
                 .withExecutionDelay(enqueueParams.getExecutionDelay())
-                .withActor(enqueueParams.getActor());
+                .withActor(enqueueParams.getActor())
+                .withPriority(enqueueParams.getPriority());
         return queueShard.getTransactionTemplate().execute(status ->
                 queueShard.getQueueDao().enqueue(queueConfig.getLocation(), rawEnqueueParams));
     }

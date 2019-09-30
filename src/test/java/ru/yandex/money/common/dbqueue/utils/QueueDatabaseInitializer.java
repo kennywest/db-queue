@@ -26,6 +26,7 @@ public class QueueDatabaseInitializer {
             "  attempt           INTEGER                  DEFAULT 0,\n" +
             "  reenqueue_attempt INTEGER                  DEFAULT 0,\n" +
             "  total_attempt     INTEGER                  DEFAULT 0,\n" +
+            "  priority          INTEGER                  DEFAULT 0,\n" +
             "  actor             VARCHAR(128),\n" +
             "  log_timestamp     TEXT\n" +
             ");" +

@@ -3,6 +3,10 @@ package example;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -34,6 +38,7 @@ import javax.annotation.Nonnull;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author Oleg Kandaurov
@@ -43,11 +48,32 @@ import java.util.Collections;
 @ContextConfiguration(classes = {SpringAutoConfiguration.Base.class, SpringAutoConfiguration.Client.class})
 public class SpringAutoConfiguration {
 
+    private static final Logger logger = LoggerFactory.getLogger(SpringAutoConfiguration.class);
+
+    private static CountDownLatch latch = new CountDownLatch(9);
+
     private static final QueueId EXAMPLE_QUEUE = new QueueId("example_queue");
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Test
     public void spring_auto_config() throws Exception {
         Assert.assertTrue(true);
+
+        QueueProducer<String> producer = (QueueProducer<String>) applicationContext.getBean("exampleProducer");
+
+        producer.enqueue(EnqueueParams.create("dit is een test1").withPriority(2));
+        producer.enqueue(EnqueueParams.create("dit is een test2").withPriority(7));
+        producer.enqueue(EnqueueParams.create("dit is een test3").withPriority(6));
+        producer.enqueue(EnqueueParams.create("dit is een test4").withPriority(5));
+        producer.enqueue(EnqueueParams.create("dit is een test5").withPriority(4));
+        producer.enqueue(EnqueueParams.create("dit is een test6").withPriority(3));
+        producer.enqueue(EnqueueParams.create("dit is een test7").withPriority(2));
+        producer.enqueue(EnqueueParams.create("dit is een test8").withPriority(1));
+        producer.enqueue(EnqueueParams.create("dit is een test9").withPriority(0));
+
+        latch.await();
     }
 
     @ContextConfiguration
@@ -58,6 +84,8 @@ public class SpringAutoConfiguration {
                 @Nonnull
                 @Override
                 public TaskExecutionResult execute(@Nonnull Task<String> task) {
+                    logger.info("EXECUTING: " + task.getPayload());
+                    latch.countDown();
                     return TaskExecutionResult.finish();
                 }
             };
@@ -101,12 +129,13 @@ public class SpringAutoConfiguration {
 
         @Bean
         SpringQueueConfigContainer springQueueConfigContainer() {
+            QueueDatabaseInitializer.createTable("example_spring_table");
             return new SpringQueueConfigContainer(Collections.singletonList(new QueueConfig(
                     QueueLocation.builder().withTableName("example_spring_table")
                             .withQueueId(EXAMPLE_QUEUE).build(),
                     QueueSettings.builder()
-                            .withBetweenTaskTimeout(Duration.ofMillis(100L))
-                            .withNoTaskTimeout(Duration.ofSeconds(1L))
+                            .withBetweenTaskTimeout(Duration.ofMillis(1000L))
+                            .withNoTaskTimeout(Duration.ofSeconds(10L))
                             .build())));
         }
 
