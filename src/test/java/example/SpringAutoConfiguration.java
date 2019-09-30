@@ -63,15 +63,15 @@ public class SpringAutoConfiguration {
 
         QueueProducer<String> producer = (QueueProducer<String>) applicationContext.getBean("exampleProducer");
 
-        producer.enqueue(EnqueueParams.create("dit is een test1").withPriority(2));
-        producer.enqueue(EnqueueParams.create("dit is een test2").withPriority(7));
-        producer.enqueue(EnqueueParams.create("dit is een test3").withPriority(6));
-        producer.enqueue(EnqueueParams.create("dit is een test4").withPriority(5));
-        producer.enqueue(EnqueueParams.create("dit is een test5").withPriority(4));
-        producer.enqueue(EnqueueParams.create("dit is een test6").withPriority(3));
-        producer.enqueue(EnqueueParams.create("dit is een test7").withPriority(2));
-        producer.enqueue(EnqueueParams.create("dit is een test8").withPriority(1));
-        producer.enqueue(EnqueueParams.create("dit is een test9").withPriority(0));
+        producer.enqueue(EnqueueParams.create("This is a test 1").withPriority(2));
+        producer.enqueue(EnqueueParams.create("This is a test 2").withPriority(7));
+        producer.enqueue(EnqueueParams.create("This is a test 3").withPriority(6));
+        producer.enqueue(EnqueueParams.create("This is a test 4").withPriority(5));
+        producer.enqueue(EnqueueParams.create("This is a test 5").withPriority(4));
+        producer.enqueue(EnqueueParams.create("This is a test 6").withPriority(3));
+        producer.enqueue(EnqueueParams.create("This is a test 7").withPriority(2));
+        producer.enqueue(EnqueueParams.create("This is a test 8").withPriority(1));
+        producer.enqueue(EnqueueParams.create("This is a test 9").withPriority(0));
 
         latch.await();
     }

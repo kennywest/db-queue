@@ -91,7 +91,7 @@ public final class EnqueueParams<T> {
     }
 
     @Nonnull
-    public EnqueueParams<T> withPriority(@Nullable int priority) {
+    public EnqueueParams<T> withPriority(@Nullable Integer priority) {
         this.priority = priority;
         return this;
     }
@@ -153,12 +153,13 @@ public final class EnqueueParams<T> {
         return Objects.equals(payload, that.payload) &&
                 Objects.equals(executionDelay, that.executionDelay) &&
                 Objects.equals(traceInfo, that.traceInfo) &&
-                Objects.equals(actor, that.actor);
+                Objects.equals(actor, that.actor) &&
+                Objects.equals(priority, that.priority);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(payload, executionDelay, traceInfo, actor);
+        return Objects.hash(payload, executionDelay, traceInfo, actor, priority);
     }
 
     @Override

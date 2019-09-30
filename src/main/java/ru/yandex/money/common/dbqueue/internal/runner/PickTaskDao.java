@@ -62,7 +62,7 @@ class PickTaskDao {
                         "SELECT id " +
                         "FROM %s " +
                         "WHERE queue_name = :queueName " +
-                        "  AND process_time <= now() ORDER BY priority ASC " +
+                        "  AND process_time <= now() ORDER BY priority DESC " +
                         "LIMIT 1 " +
                         "FOR UPDATE SKIP LOCKED) " +
                         "UPDATE %s q " +
